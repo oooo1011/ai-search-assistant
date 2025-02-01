@@ -55,6 +55,28 @@ export const aiConfig = {
     },
   },
 
+  // Ollama 配置
+  ollama: {
+    baseUrl: process.env.OLLAMA_BASE_URL || 'http://localhost:11434',
+    models: [
+      {
+        name: 'llama2',
+        displayName: 'Llama 2',
+        contextLength: 4096,
+      },
+      {
+        name: 'mistral',
+        displayName: 'Mistral',
+        contextLength: 8192,
+      },
+      {
+        name: 'codellama',
+        displayName: 'Code Llama',
+        contextLength: 4096,
+      },
+    ],
+  },
+
   // 默认设置
   defaultModel: 'gpt-3.5-turbo',
   defaultProvider: 'openai',

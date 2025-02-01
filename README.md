@@ -16,6 +16,22 @@
   - Mistral AI
   - DeepSeek
   - Groq (Mixtral, LLaMA)
+  - Ollama (本地模型)
+    - Llama 2
+    - Mistral
+    - Code Llama
+
+- 知识库功能
+  - 支持多个知识库
+  - 文档智能向量化
+  - 相似度搜索
+  - 上下文增强回答
+
+- 对话历史
+  - 本地存储
+  - 服务端存储（可选）
+  - 历史记录管理
+  - 对话导出
 
 - 文档处理
   - 支持 PDF、Word、Excel、PowerPoint
