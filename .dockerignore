@@ -1,0 +1,31 @@
+# 依赖
+node_modules
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# 开发文件
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+*.md
+.next
+out
+
+# 测试文件
+__tests__
+coverage
+*.test.js
+*.spec.js
+
+# IDE 配置
+.idea
+.vscode
+*.swp
+*.swo
+
+# 系统文件
+.DS_Store
+Thumbs.db
