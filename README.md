@@ -5,9 +5,8 @@
 ## 功能特点
 
 - 多搜索引擎支持
-  - Google
-  - Bing
-  - DuckDuckGo
+  - DuckDuckGo（无需 API 密钥）
+  - Tavily（AI 优化搜索引擎）
 
 - 多 AI 模型支持
   - OpenAI (GPT-4, GPT-3.5)
@@ -109,13 +108,12 @@ npm run dev
 您需要配置以下 API 密钥：
 
 - OpenAI API Key
-- Google API Key (用于搜索)
 - Google AI API Key (用于 Gemini)
 - Anthropic API Key
 - Mistral API Key
 - DeepSeek API Key
 - Groq API Key
-- Bing API Key
+- Tavily API Key
 
 ## API 密钥申请指南
 
@@ -126,17 +124,11 @@ npm run dev
 4. 点击 "Create new secret key"
 5. 复制并保存生成的 API 密钥
 
-### Google API（搜索和 AI）
-1. 访问 [Google Cloud Console](https://console.cloud.google.com/)
-2. 创建新项目或选择现有项目
-3. 启用以下 API：
-   - Custom Search API（用于搜索）
-   - Gemini API（用于 AI）
-4. 在 [凭据页面](https://console.cloud.google.com/apis/credentials) 创建 API 密钥
-5. 对于搜索还需要：
-   - 访问 [Programmable Search Engine](https://programmablesearchengine.google.com/)
-   - 创建新的搜索引擎
-   - 获取搜索引擎 ID
+### Google AI API（用于 Gemini）
+1. 访问 [Google AI Studio](https://ai.google.dev/)
+2. 注册或登录账号
+3. 进入 API Keys 页面
+4. 创建新的 API 密钥
 
 ### Anthropic API
 1. 访问 [Anthropic Console](https://console.anthropic.com/)
@@ -162,11 +154,14 @@ npm run dev
 3. 进入 API Keys 页面
 4. 生成新的 API 密钥
 
-### Bing API
-1. 访问 [Microsoft Azure Portal](https://portal.azure.com/)
-2. 注册 Azure 账号
-3. 创建 Bing Search API 资源
-4. 获取 API 密钥和终结点
+### Tavily API
+1. 访问 [Tavily AI](https://tavily.com/)
+2. 点击 "Get API Key"
+3. 注册账号
+4. 在仪表板中获取 API 密钥
+
+### DuckDuckGo
+- 无需 API 密钥，可直接使用
 
 ### Supabase（可选，用于服务端存储）
 1. 访问 [Supabase](https://supabase.com/)
@@ -189,8 +184,6 @@ npm run dev
 OPENAI_API_KEY=your_openai_api_key
 
 # Google
-GOOGLE_API_KEY=your_google_api_key
-GOOGLE_SEARCH_ENGINE_ID=your_search_engine_id
 GOOGLE_AI_API_KEY=your_google_ai_api_key
 
 # Anthropic
@@ -205,8 +198,8 @@ DEEPSEEK_API_KEY=your_deepseek_api_key
 # Groq
 GROQ_API_KEY=your_groq_api_key
 
-# Bing
-BING_API_KEY=your_bing_api_key
+# Tavily
+TAVILY_API_KEY=your_tavily_api_key
 
 # Supabase（可选）
 SUPABASE_URL=your_supabase_project_url
