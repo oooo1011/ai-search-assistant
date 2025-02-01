@@ -5,29 +5,43 @@
 ## 1. 系统要求
 
 - Debian 11 或更高版本
-- Node.js 18.x 或更高版本
-- Nginx
-- PM2 (Node.js 进程管理器)
+- Docker 和 Docker Compose
+- Git
 
-## 2. 安装基础软件
+## 2. 安装 Docker 和 Docker Compose
 
 ```bash
 # 更新系统
 sudo apt update
 sudo apt upgrade -y
 
-# 安装 Node.js
-curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-sudo apt install -y nodejs
+# 安装必要的依赖
+sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
 
-# 安装 Nginx
-sudo apt install -y nginx
+# 添加 Docker 官方 GPG 密钥
+curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 
-# 安装 PM2
-sudo npm install -g pm2
+# 添加 Docker 仓库
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# 更新包索引
+sudo apt update
+
+# 安装 Docker
+sudo apt install -y docker-ce docker-ce-cli containerd.io
+
+# 安装 Docker Compose
+sudo apt install -y docker-compose
+
+# 将当前用户添加到 docker 组
+sudo usermod -aG docker $USER
+
+# 启动 Docker
+sudo systemctl start docker
+sudo systemctl enable docker
 ```
 
-## 3. 项目部署
+## 3. 部署项目
 
 ### 3.1 克隆项目
 
@@ -37,151 +51,126 @@ mkdir -p /var/www
 cd /var/www
 
 # 克隆项目
-git clone <your-repository-url> ai-search-assistant
+git clone https://github.com/your-username/ai-search-assistant.git
 cd ai-search-assistant
 ```
 
-### 3.2 安装依赖
+### 3.2 配置环境变量
 
 ```bash
-# 安装项目依赖
-npm install
-
-# 构建项目
-npm run build
-```
-
-### 3.3 配置环境变量
-
-```bash
-# 创建环境变量文件
+# 复制环境变量模板
 cp .env.local.example .env.local
 
-# 编辑环境变量文件，填入您的 API 密钥
+# 编辑环境变量文件
 nano .env.local
 ```
 
-## 4. 配置 Nginx
+填入必要的 API 密钥：
+```
+# OpenAI
+OPENAI_API_KEY=your_openai_api_key
 
-```bash
-# 复制 Nginx 配置文件
-sudo cp deploy/nginx.conf /etc/nginx/sites-available/ai-search-assistant
+# Google
+GOOGLE_API_KEY=your_google_api_key
+GOOGLE_SEARCH_ENGINE_ID=your_search_engine_id
+GOOGLE_AI_API_KEY=your_google_ai_api_key
 
-# 创建符号链接
-sudo ln -s /etc/nginx/sites-available/ai-search-assistant /etc/nginx/sites-enabled/
+# Anthropic
+ANTHROPIC_API_KEY=your_anthropic_api_key
 
-# 测试 Nginx 配置
-sudo nginx -t
+# Mistral
+MISTRAL_API_KEY=your_mistral_api_key
 
-# 重启 Nginx
-sudo systemctl restart nginx
+# DeepSeek
+DEEPSEEK_API_KEY=your_deepseek_api_key
+
+# Groq
+GROQ_API_KEY=your_groq_api_key
+
+# Bing
+BING_API_KEY=your_bing_api_key
 ```
 
-## 5. 启动应用
+### 3.3 构建和启动容器
 
 ```bash
-# 使用 PM2 启动应用
-pm2 start ecosystem.config.js
-
-# 设置开机自启
-pm2 startup
-pm2 save
-```
-
-## 6. SSL 配置（可选但推荐）
-
-```bash
-# 安装 Certbot
-sudo apt install -y certbot python3-certbot-nginx
-
-# 获取 SSL 证书
-sudo certbot --nginx -d your_domain.com
-
-# Certbot 会自动修改 Nginx 配置
-```
-
-## 7. 防火墙配置
-
-```bash
-# 安装 UFW
-sudo apt install -y ufw
-
-# 配置防火墙规则
-sudo ufw allow ssh
-sudo ufw allow http
-sudo ufw allow https
-
-# 启用防火墙
-sudo ufw enable
-```
-
-## 8. 维护命令
-
-```bash
-# 查看应用状态
-pm2 status
+# 构建和启动容器
+docker-compose up -d --build
 
 # 查看日志
-pm2 logs ai-search-assistant
-
-# 重启应用
-pm2 restart ai-search-assistant
-
-# 更新代码
-cd /var/www/ai-search-assistant
-git pull
-npm install
-npm run build
-pm2 restart ai-search-assistant
+docker-compose logs -f
 ```
 
-## 9. 故障排除
+现在您可以通过 http://your-server-ip:3000 访问应用。
 
-### 9.1 检查日志
+## 4. 维护命令
 
 ```bash
-# PM2 日志
-pm2 logs ai-search-assistant
+# 查看容器状态
+docker-compose ps
 
-# Nginx 错误日志
-sudo tail -f /var/log/nginx/error.log
+# 查看日志
+docker-compose logs -f
 
-# Nginx 访问日志
-sudo tail -f /var/log/nginx/access.log
+# 重启应用
+docker-compose restart
+
+# 停止应用
+docker-compose down
+
+# 更新代码和重新部署
+git pull
+docker-compose up -d --build
 ```
 
-### 9.2 常见问题
+## 5. 故障排除
 
-1. 502 Bad Gateway
-   - 检查 Node.js 应用是否正在运行
-   - 检查 Nginx 配置中的端口是否正确
-   - 检查防火墙设置
+### 5.1 检查日志
 
-2. 无法上传文件
-   - 检查 Nginx 配置中的 client_max_body_size
-   - 检查目录权限
+```bash
+# 查看容器日志
+docker-compose logs -f
+
+# 查看特定时间段的日志
+docker-compose logs --since 30m
+```
+
+### 5.2 常见问题
+
+1. 容器无法启动
+   - 检查 Docker 服务状态：`sudo systemctl status docker`
+   - 检查环境变量是否正确配置
+   - 检查端口 3000 是否被占用：`sudo lsof -i :3000`
+
+2. 无法访问应用
+   - 检查防火墙设置：`sudo ufw status`
+   - 确保端口 3000 开放：`sudo ufw allow 3000/tcp`
+   - 检查容器是否正在运行：`docker-compose ps`
 
 3. API 调用失败
    - 检查环境变量是否正确配置
    - 检查 API 密钥是否有效
+   - 查看容器日志寻找错误信息
 
-## 10. 性能优化
+## 6. 安全建议
 
-1. 启用 Nginx 缓存
-2. 配置 PM2 集群模式
-3. 使用 CDN 加速静态资源
+1. 使用强密码和密钥
+2. 定期更新系统和 Docker
+3. 只开放必要的端口
+4. 配置 UFW 防火墙
+5. 定期备份数据和配置
 
-## 11. 备份策略
+## 7. 性能优化
 
-1. 定期备份数据
-2. 备份环境变量
-3. 备份 Nginx 配置
+1. 调整 Docker 资源限制
+2. 监控系统资源使用
+3. 定期清理未使用的 Docker 镜像和容器
 
-## 12. 监控
+## 8. 备份策略
 
-1. 使用 PM2 监控
-2. 配置服务器监控
-3. 设置告警机制
+1. 备份环境变量
+2. 备份 Docker 配置
+3. 设置定期备份计划
 
 ## 联系方式
 
