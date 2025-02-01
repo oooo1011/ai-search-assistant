@@ -29,6 +29,29 @@
 
 ## 快速开始
 
+### 方式一：使用 Docker（推荐）
+
+1. 克隆项目
+```bash
+git clone https://github.com/your-username/ai-search-assistant.git
+cd ai-search-assistant
+```
+
+2. 配置环境变量
+```bash
+cp .env.local.example .env.local
+# 编辑 .env.local 文件，填入您的 API 密钥
+```
+
+3. 使用 Docker 运行
+```bash
+docker-compose up -d
+```
+
+4. 访问 http://localhost:3000
+
+### 方式二：本地开发
+
 1. 克隆项目
 ```bash
 git clone https://github.com/your-username/ai-search-assistant.git
@@ -53,6 +76,11 @@ npm run dev
 
 ## 环境要求
 
+### Docker 部署
+- Docker
+- Docker Compose
+
+### 本地开发
 - Node.js 18.x 或更高版本
 - npm 9.x 或更高版本
 
@@ -80,6 +108,7 @@ npm run dev
 - TypeScript
 - Tailwind CSS
 - LangChain
+- Docker
 
 ## 贡献指南
 
